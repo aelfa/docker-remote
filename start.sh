@@ -7,11 +7,9 @@
 # shellcheck disable=SC2002
 # shellcheck disable=SC2006
 
-CMD="$@"
-echo $CMD
-$CMD
-if [ $? -ne 0 ]
-then
-    echo "works"    
+CMD=$1
+echo "${CMD}"
+if [ $? -eq 0 ];then
+    echo "works 22"
 fi
 exit 1
