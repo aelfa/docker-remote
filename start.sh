@@ -7,9 +7,19 @@
 # shellcheck disable=SC2002
 # shellcheck disable=SC2006
 
-CMD=$1
-echo "${CMD}"
-if [ $? -eq 0 ];then
-    echo "works 22"
+if [[ ! -z "$BACKUP" ]];then
+    echo $BACKUP
+    # Set arguments
+    if [[ "$#" -eq "0" ]];then
+        set -- "$@" $BACKUP
+    fi
 fi
-exit 1
+
+CMD="/usr/bin/echo $@"
+echo $CMD
+$CMD
+
+# If error, print the error
+if [ $? -ne 0 ];then
+    echo "Here is the output"
+fi
