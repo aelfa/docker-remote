@@ -21,5 +21,5 @@ RUN \
   rm -rf /var/cache/apk/*
 
 COPY ./start.sh /usr/local/bin/
-
+RUN chmod 777 /usr/local/bin/start.sh
 ENTRYPOINT ["/usr/local/bin/start.sh"]
