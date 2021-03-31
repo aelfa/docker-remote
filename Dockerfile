@@ -4,8 +4,7 @@
 # Docker owned from sudobox.io      #
 # Docker Maintainer MrDoob          #
 #####################################
-
-FROM lsiobase/alpine:3.13
+FROM alpine
 LABEL maintainer=sudobox.io
 LABEL org.opencontainers.image.source https://github.com/doob187/docker-remote/
 
@@ -20,9 +19,8 @@ RUN \
   bash bc rsync rclone findutils coreutils && \
   rm -rf /var/cache/apk/*
 
-COPY root/ /
-
-#COPY ./start.sh /config/start.sh
-RUN chmod 777 /config/start.sh
-RUN chown -R 1000:1000 /config/start.sh
-ENTRYPOINT [ "/bin/sh", "/config/start.sh" ]
+#COPY root/ /
+COPY start.sh /
+#RUN chmod 777 start.sh
+#RUN chown -R 1000:1000 start.sh
+ENTRYPOINT [ "/bin/sh", "/start.sh" ]
