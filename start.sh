@@ -17,24 +17,19 @@ restore() {
   echo "testrestore = ${1} ${2} ${3}"
 }
 
-sleep 1
-
+# CHECK ARE 3 ARGUMENTES
 if [[ $# -ne 3 ]]; then
   usage
 fi
 
+# ARGUMENTES
 OPERATION=$1
 ARCHIVE=$2.tar.gz
 REMOTE=$3
 
+# RUNNER
 case "$OPERATION" in
-"backup" )
-  backup
-  ;;
-"restore" )
-  restore
-  ;;
-* )
-  usage
-  ;;
+ "backup" ) backup ;;
+ "restore" ) restore ;;
+ * ) usage ;;
 esac
