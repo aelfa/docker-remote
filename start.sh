@@ -14,7 +14,7 @@ backup() {
 }
 
 restore() {
-  echo "restore = ${1} ${2} ${3}"
+  echo "testrestore = ${1} ${2} ${3}"
 }
 
 sleep 1
