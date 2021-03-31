@@ -10,16 +10,16 @@ usage() {
 }
 
 backup() {
-  echo "$1 $2 $3"
+  echo "testbackup = ${1} ${2} ${3}"
 }
 
 restore() {
-  echo "$1 $2 $3"
+  echo "restore = ${1} ${2} ${3}"
 }
 
 sleep 1
 
-if [ $# -ne 2 ]; then
+if [[ $# -ne 3 ]]; then
   usage
 fi
 
