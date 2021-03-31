@@ -20,7 +20,7 @@ RUN \
   bash bc rsync rclone findutils coreutils && \
   rm -rf /var/cache/apk/*
 
-COPY ./start.sh /config/start.sh
+#COPY ./start.sh /config/start.sh
 RUN chmod 777 /config/start.sh
 RUN chown -R 1000:1000 /config/start.sh
 ENTRYPOINT [ "/bin/sh", "/config/start.sh" ]
