@@ -63,7 +63,7 @@ REMOTE=${REMOTE}
                echo "depends install of $i"
            done
         fi
-}}
+}
 
 ## check specific app of existing
 check() {
