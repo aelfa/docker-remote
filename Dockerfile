@@ -1,11 +1,11 @@
 #####################################
 # All rights reserved.              #
 # started from Zero                 #
-# Docker owned from sudobox.io      #
+# Docker owned doob187              #
 # Docker Maintainer MrDoob          #
 #####################################
 FROM alpine
-LABEL maintainer=sudobox.io
+LABEL maintainer=doob187
 LABEL org.opencontainers.image.source https://github.com/doob187/docker-remote/
 
 RUN \
@@ -20,8 +20,4 @@ RUN \
   rm -f /var/cache/apk/*
 
 COPY root/ /
-#COPY backup_excludes /
-#COPY start.sh /
-#RUN chmod 777 start.sh
-#RUN chown -R 1000:1000 start.sh
 ENTRYPOINT [ "/bin/sh", "/start.sh" ]
