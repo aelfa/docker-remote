@@ -19,8 +19,9 @@ RUN \
   apk del --quiet --clean-protected --no-progress && \
   rm -f /var/cache/apk/*
 
-#COPY root/ /
-COPY start.sh /
+COPY root/ /
+#COPY backup_excludes /
+#COPY start.sh /
 #RUN chmod 777 start.sh
 #RUN chown -R 1000:1000 start.sh
 ENTRYPOINT [ "/bin/sh", "/start.sh" ]
