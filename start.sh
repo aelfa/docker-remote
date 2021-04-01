@@ -43,7 +43,6 @@ REMOTE=${REMOTE}
   echo "test check = ${OPERATION} ${ARCHIVE} ${REMOTE}"
 }
 
-}
 # CHECK ARE 3 ARGUMENTES #
 if [[ $# -ne 3 ]];then usage;fi
 
