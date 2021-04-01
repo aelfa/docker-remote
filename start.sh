@@ -23,24 +23,33 @@ usage() {
 backup() {
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
+ARCHIVETAR=${ARCHIVE}.tar.gz
 REMOTE=${REMOTE}
-  echo "test backup command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
+   echo "test backup command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
+        if [[ ! -d /${OPERATION}/${ARCHIVE} ]];then mkdir -p /${OPERATION}/${ARCHIVE};fi
+   echo "folder /${OPERATION}/${ARCHIVE} created"
 }
 
 ## restore specific app
 restore() {
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
+ARCHIVETAR=${ARCHIVE}.tar.gz
 REMOTE=${REMOTE}
-  echo "test restore command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
+   echo "test restore command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
+         if [[ ! -d /${OPERATION}/${ARCHIVE} ]];then mkdir -p /${OPERATION}/${ARCHIVE};fi
+   echo "folder /${OPERATION}/${ARCHIVE} created"
 }
 
 ## check specific app of existing
 check() {
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
+ARCHIVETAR=${ARCHIVE}.tar.gz
 REMOTE=${REMOTE}
-  echo "test check command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
+   echo "test check command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
+        if [[ ! -d /${OPERATION}/${ARCHIVE} ]];then mkdir -p /${OPERATION}/${ARCHIVE};fi
+   echo "folder /${OPERATION}/${ARCHIVE} created"
 }
 
 # CHECK ARE 3 ARGUMENTES #
@@ -48,7 +57,8 @@ if [[ $# -ne 3 ]];then usage;fi
 
 # ARGUMENTES #
 OPERATION=$1
-ARCHIVE=$2.tar.gz
+ARCHIVE=$2
+ARCHIVETAR=$2.tar.gz
 REMOTE=$3
 
 # RUNNER #
