@@ -32,13 +32,13 @@ REMOTE=${REMOTE}
         if [ ! -d /${OPERATION}/${ARCHIVE} ];then mkdir -p /${OPERATION}/${ARCHIVE};fi
    echo "folder /${OPERATION}/${ARCHIVE} created"
         if [ ! -x "$(command -v rsync)" ] && [ ! -x "$(command -v rclone)" ];then
-        apk --quiet --no-cache --no-progress update && \
-        apk --quiet --no-cache --no-progress upgrade
-        inst="rsync rclone bc"
-        for i in ${inst};do
-            apk --quiet --no-cache --no-progress add $i
-            echo "depends install of $i"
-        done
+           apk --quiet --no-cache --no-progress update && \
+           apk --quiet --no-cache --no-progress upgrade
+           inst="rsync rclone bc"
+           for i in ${inst};do
+               apk --quiet --no-cache --no-progress add $i
+               echo "depends install of $i"
+           done
         fi
 }
 
@@ -55,15 +55,15 @@ REMOTE=${REMOTE}
         if [ ! -d /${OPERATION}/${ARCHIVE} ];then mkdir -p /${OPERATION}/${ARCHIVE};fi
    echo "folder /${OPERATION}/${ARCHIVE} created"
         if [ ! -x "$(command -v rsync)" ] && [ ! -x "$(command -v rclone)" ];then
-        apk --quiet --no-cache --no-progress update && \
-        apk --quiet --no-cache --no-progress upgrade
-        inst="rsync rclone bc"
-        for i in ${inst};do
-            apk --quiet --no-cache --no-progress add $i
-            echo "depends install of $i"
-        done
+           apk --quiet --no-cache --no-progress update && \
+           apk --quiet --no-cache --no-progress upgrade
+           inst="rsync rclone bc"
+           for i in ${inst};do
+               apk --quiet --no-cache --no-progress add $i
+               echo "depends install of $i"
+           done
         fi
-}
+}}
 
 ## check specific app of existing
 check() {
