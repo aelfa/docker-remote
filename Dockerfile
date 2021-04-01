@@ -16,12 +16,8 @@ RUN \
 RUN \
   echo "**** install build packages ****" && \
   apk --quiet --no-cache --no-progress add bash shadow musl findutils coreutils && \
+  apk del --quiet --clean-protected --no-progress && \
   rm -f /var/cache/apk/*
-
-RUN \
-  echo "**** purge build packages cache ****" && \
-  apk --quiet --no-cache --no-progress cache clean && \
-  apk --quiet --clean-protected --no-progress del
 
 #COPY root/ /
 COPY start.sh /
