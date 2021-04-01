@@ -7,6 +7,15 @@
 # fork allowing: yes
 # modification allowed: yes
 ######
+#FUNCTIONS START
+OPTIONSTAR="--warning=no-file-changed \
+  --ignore-failed-read \
+  --absolute-names \
+  --warning=no-file-removed \
+  --exclude-from=/backup_excludes \
+  --use-compress-program=pigz"
+
+#FUNCTIONS END
 
 usage() {
   echo "Usage: <backup|restore|check> <appname> <remote>"
@@ -26,7 +35,7 @@ OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
 ARCHIVETAR=${ARCHIVE}.tar.gz
 REMOTE=${REMOTE}
-
+ARCHIVEROOT="/backup/${ARCHIVE}"
 ## start
    echo "test ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
         if [ ! -d /${OPERATION}/${ARCHIVE} ];then mkdir -p /${OPERATION}/${ARCHIVE};fi
@@ -34,12 +43,18 @@ REMOTE=${REMOTE}
         if [ ! -x "$(command -v rsync)" ] && [ ! -x "$(command -v rclone)" ];then
            apk --quiet --no-cache --no-progress update && \
            apk --quiet --no-cache --no-progress upgrade
-           inst="rsync rclone bc"
+           inst="rsync rclone bc pigz tar"
            for i in ${inst};do
                apk --quiet --no-cache --no-progress add $i
                echo "depends install of $i"
            done
         fi
+   echo "RUN TAR for ${ARCHIVE}"
+   cd ${ARCHIVEROOT}
+        for dir_tar in `find . -maxdepth 1 -type d | grep -v "^\.$" `; do
+            tar ${OPTIONSTAR} -C ${ARCHIVE} -cvf ${ARCHIVETAR} ./
+        done
+
 }
 
 ## restore specific app
