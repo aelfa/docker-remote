@@ -24,7 +24,7 @@ backup() {
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
 REMOTE=${REMOTE}
-  echo "testbackup = ${OPERATION} ${ARCHIVE} ${REMOTE}"
+  echo "test backup command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
 }
 
 ## restore specific app
@@ -32,7 +32,7 @@ restore() {
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
 REMOTE=${REMOTE}
-  echo "testrestore = ${OPERATION} ${ARCHIVE} ${REMOTE}"
+  echo "test restore command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
 }
 
 ## check specific app of existing
@@ -40,7 +40,7 @@ check() {
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
 REMOTE=${REMOTE}
-  echo "test check = ${OPERATION} ${ARCHIVE} ${REMOTE}"
+  echo "test check command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
 }
 
 # CHECK ARE 3 ARGUMENTES #
