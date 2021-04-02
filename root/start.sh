@@ -39,7 +39,7 @@ ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
    echo "test ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
         if [ ! -d /${OPERATION}/${ARCHIVE} ];then mkdir -p /${OPERATION}/${ARCHIVE};fi
    echo "folder /${OPERATION}/${ARCHIVE} created"
-        if [ ! -x "$command -v tar) ] && [ ! -x "$(command -v rclone)" ];then
+        if [ ! -x "$command -v tar)" ] && [ ! -x "$(command -v rclone)" ];then
            apk --quiet --no-cache --no-progress update && \
            apk --quiet --no-cache --no-progress upgrade
            inst="rclone bc tar"
