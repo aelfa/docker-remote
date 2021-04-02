@@ -30,6 +30,7 @@ usage() {
 
 ## backup specific app
 backup() {
+STARTTIME=$(date +%s)
 ## parser
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
@@ -49,6 +50,9 @@ ARCHIVEROOT="/backup/${ARCHIVE}"
    echo "Start TAR for ${ARCHIVETAR}"
       cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVETAR} ./
    echo "Finished TAR for ${ARCHIVETAR}"
+   ENDTIME=$(date +%s)
+   TIME="$((count=${ENDTIME}-${STARTTIME}))"
+   echo "used ${TIME}m" 
 
 }
 
