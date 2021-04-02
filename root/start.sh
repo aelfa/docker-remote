@@ -36,6 +36,7 @@ OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
 ARCHIVETAR=${ARCHIVE}.tar.gz
 REMOTE=${REMOTE}
+DESTINATION="/mnt/downloads/backup"
 ARCHIVEROOT="/backup/${ARCHIVE}"
 ## start
    echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
@@ -47,13 +48,18 @@ ARCHIVEROOT="/backup/${ARCHIVE}"
          apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
       done
    fi
-   echo "Start TAR for ${ARCHIVETAR}"
+   echo "Start tar for ${ARCHIVETAR}"
       cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVETAR} ./
-   echo "Finished TAR for ${ARCHIVETAR}"
+   echo "Finished tar for ${ARCHIVETAR}"
+   if [[ ! -d ${DESTINATION} ]];then $(command -v mkdir) -p ${DESTINATION};fi
+      $(command -v rsync) -aqvh --remove-source-files --info=progress2 ${ARCHIVEROOT}/${ARCHIVETAR} ${DESTINATION}/${ARCHIVETAR}
+      $(command -v chown) -hR 1000:1000 ${DESTINATION}
+   echo "Finished rsync for ${ARCHIVETAR}"
+   #ENDING
    ENDTIME=$(date +%s)
    TIME="$((count=${ENDTIME}-${STARTTIME}))"
    duration="$(($TIME / 60)) minutes and $(($TIME % 60)) seconds elapsed."
-   echo "used ${duration}" 
+   echo "used ${duration}"
 
 }
 
