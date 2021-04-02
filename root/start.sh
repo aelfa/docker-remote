@@ -50,10 +50,7 @@ ARCHIVEROOT="/backup/${ARCHIVE}"
            done
         fi
    echo "RUN TAR for ${ARCHIVE}"
-   cd ${ARCHIVEROOT}
-        for dir_tar in `find . -maxdepth 1 -type d | grep -v "^\.$" `; do
-            tar ${OPTIONSTAR} -C ${ARCHIVE} -cvf ${ARCHIVETAR} ./
-        done
+   cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cvf ${ARCHIVETAR} ./
 
 }
 
