@@ -36,7 +36,7 @@ OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
 ARCHIVETAR=${ARCHIVE}.tar.gz
 REMOTE=${REMOTE}
-DESTINATION="/mnt/downloads/backup"
+DESTINATION="/mnt/downloads/appbackups"
 ARCHIVEROOT="/backup/${ARCHIVE}"
 ## start
    echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
