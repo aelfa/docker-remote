@@ -37,20 +37,20 @@ ARCHIVETAR=${ARCHIVE}.tar.gz
 REMOTE=${REMOTE}
 ARCHIVEROOT="/backup/${ARCHIVE}"
 ## start
-   echo "test ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
-        if [ ! -d /${OPERATION}/${ARCHIVE} ];then mkdir -p /${OPERATION}/${ARCHIVE};fi
-   echo "folder /${OPERATION}/${ARCHIVE} created"
-        if [ ! -x "$(command -v rsync)" ] && [ ! -x "$(command -v rclone)" ];then
-           apk --quiet --no-cache --no-progress update && \
-           apk --quiet --no-cache --no-progress upgrade
-           inst="rsync rclone bc pigz tar"
-           for i in ${inst};do
-               apk --quiet --no-cache --no-progress add $i
-               echo "depends install of $i"
-           done
-        fi
-   echo "RUN TAR for ${ARCHIVE}"
-   cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVETAR} ./
+   $(ls ${ARCHIVEROOT}/** )
+   if [ $? -nq 0 ];then exit;fi
+   echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
+   if [ ! -x "$(command -v rsync)" ] && [ ! -x "$(command -v rclone)" ];then
+      apk --quiet --no-cache --no-progress update && \
+      apk --quiet --no-cache --no-progress upgrade
+      inst="rsync rclone bc pigz tar"
+      for i in ${inst};do
+         apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
+      done
+   fi
+   echo "Start TAR for ${ARCHIVETAR}"
+      cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVETAR} ./
+   echo "Finished TAR for ${ARCHIVETAR}"
 
 }
 
@@ -63,18 +63,15 @@ ARCHIVETAR=${ARCHIVE}.tar.gz
 REMOTE=${REMOTE}
 
 ## start
-   echo "test ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
-        if [ ! -d /${OPERATION}/${ARCHIVE} ];then mkdir -p /${OPERATION}/${ARCHIVE};fi
-   echo "folder /${OPERATION}/${ARCHIVE} created"
-        if [ ! -x "$(command -v rsync)" ] && [ ! -x "$(command -v rclone)" ];then
-           apk --quiet --no-cache --no-progress update && \
-           apk --quiet --no-cache --no-progress upgrade
-           inst="rsync rclone bc"
-           for i in ${inst};do
-               apk --quiet --no-cache --no-progress add $i
-               echo "depends install of $i"
-           done
-        fi
+   echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
+   if [ ! -x "$(command -v rsync)" ] && [ ! -x "$(command -v rclone)" ];then
+      apk --quiet --no-cache --no-progress update && \
+      apk --quiet --no-cache --no-progress upgrade
+      inst="rsync rclone bc tar"
+      for i in ${inst};do
+          apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
+      done
+   fi
 }
 
 ## check specific app of existing
@@ -86,7 +83,7 @@ ARCHIVETAR=${ARCHIVE}.tar.gz
 REMOTE=${REMOTE}
 
 ## start
-   echo "test ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
+   echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
         if [ ! -d /${OPERATION}/${ARCHIVE} ];then mkdir -p /${OPERATION}/${ARCHIVE};fi
    echo "folder /${OPERATION}/${ARCHIVE} created"
 }
