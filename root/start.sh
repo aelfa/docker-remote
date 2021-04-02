@@ -50,7 +50,7 @@ ARCHIVEROOT="/backup/${ARCHIVE}"
            done
         fi
    echo "RUN TAR for ${ARCHIVE}"
-   cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cvf ${ARCHIVETAR} ./
+   cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -C ${ARCHIVE} -zxf ${ARCHIVETAR} ./
 
 }
 
