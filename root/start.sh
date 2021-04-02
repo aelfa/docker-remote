@@ -13,7 +13,7 @@ OPTIONSTAR="--warning=no-file-changed \
   --absolute-names \
   --warning=no-file-removed \
   --exclude-from=/backup_excludes \
-  --use-compress-program=pigz""
+  --use-compress-program=pigz"
 
 #FUNCTIONS END
 
