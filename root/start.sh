@@ -12,8 +12,7 @@ OPTIONSTAR="--warning=no-file-changed \
   --ignore-failed-read \
   --absolute-names \
   --warning=no-file-removed \
-  --exclude-from=/backup_excludes \
-  --use-compress-program=pigz"
+  --exclude-from=/backup_excludes"
 
 #FUNCTIONS END
 
@@ -35,15 +34,15 @@ OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
 ARCHIVETAR=${ARCHIVE}.tar.gz
 REMOTE=${REMOTE}
-ARCHIVEROOT="/backup/${ARCHIVE}"
+ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
 ## start
    echo "test ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
         if [ ! -d /${OPERATION}/${ARCHIVE} ];then mkdir -p /${OPERATION}/${ARCHIVE};fi
    echo "folder /${OPERATION}/${ARCHIVE} created"
-        if [ ! -x "$(command -v rsync)" ] && [ ! -x "$(command -v rclone)" ];then
+        if [ ! -x "$command -v tar) ] && [ ! -x "$(command -v rclone)" ];then
            apk --quiet --no-cache --no-progress update && \
            apk --quiet --no-cache --no-progress upgrade
-           inst="rsync rclone bc pigz tar"
+           inst="rclone bc tar"
            for i in ${inst};do
                apk --quiet --no-cache --no-progress add $i
                echo "depends install of $i"
@@ -66,10 +65,10 @@ REMOTE=${REMOTE}
    echo "test ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
         if [ ! -d /${OPERATION}/${ARCHIVE} ];then mkdir -p /${OPERATION}/${ARCHIVE};fi
    echo "folder /${OPERATION}/${ARCHIVE} created"
-        if [ ! -x "$(command -v rsync)" ] && [ ! -x "$(command -v rclone)" ];then
+        if [ ! -x "$(command -v tar)" ] && [ ! -x "$(command -v rclone)" ];then
            apk --quiet --no-cache --no-progress update && \
            apk --quiet --no-cache --no-progress upgrade
-           inst="rsync rclone bc"
+           inst="tar rclone bc"
            for i in ${inst};do
                apk --quiet --no-cache --no-progress add $i
                echo "depends install of $i"
