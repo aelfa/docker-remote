@@ -38,7 +38,7 @@ REMOTE=${REMOTE}
 ARCHIVEROOT="/backup/${ARCHIVE}"
 ## start
    $(ls ${ARCHIVEROOT}/** )
-   if [ $? -nq 0 ];then exit;fi
+   if [ $? -ne 0 ];then exit;fi
    echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
    if [ ! -x "$(command -v rsync)" ] && [ ! -x "$(command -v rclone)" ];then
       apk --quiet --no-cache --no-progress update && \
