@@ -35,11 +35,11 @@ STARTTIME=$(date +%s)
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
 ARCHIVETAR=${ARCHIVE}.tar.gz
-REMOTE=${REMOTE}
 DESTINATION="/mnt/downloads/appbackups"
 ARCHIVEROOT="/backup/${ARCHIVE}"
+
 ## start
-   echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
+   echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
    if [ ! -x "$(command -v rsync)" ] && [ ! -x "$(command -v rclone)" ];then
       apk --quiet --no-cache --no-progress update && \
       apk --quiet --no-cache --no-progress upgrade
@@ -69,10 +69,9 @@ restore() {
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
 ARCHIVETAR=${ARCHIVE}.tar.gz
-REMOTE=${REMOTE}
 
 ## start
-   echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
+   echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
    if [ ! -x "$(command -v rsync)" ] && [ ! -x "$(command -v rclone)" ];then
       apk --quiet --no-cache --no-progress update && \
       apk --quiet --no-cache --no-progress upgrade
@@ -89,21 +88,19 @@ check() {
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
 ARCHIVETAR=${ARCHIVE}.tar.gz
-REMOTE=${REMOTE}
 
 ## start
-   echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${REMOTE}"
+   echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
         if [ ! -d /${OPERATION}/${ARCHIVE} ];then mkdir -p /${OPERATION}/${ARCHIVE};fi
    echo "folder /${OPERATION}/${ARCHIVE} created"
 }
 
-# CHECK ARE 3 ARGUMENTES #
-if [ $# -ne 3 ];then usage;fi
+# CHECK ARE 2 ARGUMENTES #
+if [ $# -ne 2 ];then usage;fi
 
 # ARGUMENTES #
 OPERATION=$1
 ARCHIVE=$2
-REMOTE=$3
 
 # RUNNER #
 case "$OPERATION" in
