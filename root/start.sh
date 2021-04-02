@@ -43,14 +43,14 @@ ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
         if [ ! -x "$(command -v tar)" ] && [ ! -x "$(command -v rclone)" ];then
            apk --quiet --no-cache --no-progress update && \
            apk --quiet --no-cache --no-progress upgrade
-           inst="rclone bc tar"
+           inst="rclone bc pigz tar"
            for i in ${inst};do
                apk --quiet --no-cache --no-progress add $i
                echo "depends install of $i"
            done
         fi
    echo "RUN TAR for ${ARCHIVE}"
-   cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -C ${ARCHIVE} -czf ${ARCHIVETAR} ./
+   cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVETAR} ./
 
 }
 
