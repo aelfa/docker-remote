@@ -52,7 +52,8 @@ ARCHIVEROOT="/backup/${ARCHIVE}"
    echo "Finished TAR for ${ARCHIVETAR}"
    ENDTIME=$(date +%s)
    TIME="$((count=${ENDTIME}-${STARTTIME}))"
-   echo "used ${TIME}m" 
+   duration="$(($TIME / 60)) minutes and $(($TIME % 60)) seconds elapsed."
+   echo "used ${duration}" 
 
 }
 
