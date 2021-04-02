@@ -12,7 +12,8 @@ OPTIONSTAR="--warning=no-file-changed \
   --ignore-failed-read \
   --absolute-names \
   --warning=no-file-removed \
-  --exclude-from=/backup_excludes"
+  --exclude-from=/backup_excludes \
+  --use-compress-program=pigz""
 
 #FUNCTIONS END
 
@@ -49,7 +50,7 @@ ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
            done
         fi
    echo "RUN TAR for ${ARCHIVE}"
-   cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -C ${ARCHIVE} -zxf ${ARCHIVETAR} ./
+   cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -C ${ARCHIVE} -czf ${ARCHIVETAR} ./
 
 }
 
