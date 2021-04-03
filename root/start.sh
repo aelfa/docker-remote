@@ -50,9 +50,7 @@ ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
       done
    fi
    echo "Start tar for ${ARCHIVETAR}"
-      ###cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVEROOT}/${ARCHIVETAR} ./
-      tar ${OPTIONSTAR} -C ${ARCHIVEROOT}/ -cf ${ARCHIVEROOT}/${ARCHIVETAR} ./
-   echo "Finished tar for ${ARCHIVETAR}"
+      cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVETAR} ./   echo "Finished tar for ${ARCHIVETAR}"
    if [[ ! -d ${DESTINATION} ]];then $(command -v mkdir) -p ${DESTINATION};fi
       $(command -v rsync) -aqvh --remove-source-files --info=progress2 ${ARCHIVEROOT}/${ARCHIVETAR} ${DESTINATION}/${ARCHIVETAR}
       $(command -v chown) -hR 1000:1000 ${DESTINATION}
@@ -91,8 +89,7 @@ ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
    echo "Finished rsync for ${ARCHIVETAR} from ${DESTINATION}"
    if [[ ! -f ${ARCHIVEROOT}/${ARCHIVETAR} ]];then nolocalfound;fi
       echo "Start untar for ${ARCHIVETAR} on ${ARCHIVEROOT}"
-      ###cd ${ARCHIVEROOT} && tar -xvf ${ARCHIVETAR}
-      tar -xf ${ARCHIVEROOT}/${ARCHIVETAR} -C ${ARCHIVEROOT}
+      cd ${ARCHIVEROOT} && tar -xvf ${ARCHIVETAR}
       $(command -v chown) -hR 1000:1000 ${ARCHIVEROOT}
       $(command -v rm) -f ${ARCHIVEROOT}/${ARCHIVETAR}      
    ## ENDING ##
