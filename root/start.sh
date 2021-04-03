@@ -159,6 +159,7 @@ tee <<-EOF
     You need to create a backup before you can restore
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
+fi
 sleep 10 && exit
 }
 
