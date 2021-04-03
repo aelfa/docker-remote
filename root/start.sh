@@ -143,11 +143,11 @@ DESTINATION="/mnt/unionfs/appbackups"
 
 ## start ##
    echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
-   if [[ -f ${ARCHIVEROOT}/${ARCHIVETAR} ]];then
+   if [[ -f ${DESTINATION}/${ARCHIVETAR} ]];then
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     👍
-    We found ${ARCHIVETAR} on /${DESTINATION}/${ARCHIVETAR}
+    We found ${ARCHIVETAR} on ${DESTINATION}/${ARCHIVETAR}
     You can restore or create a new backup
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
@@ -155,7 +155,7 @@ else
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     ❌ ERROR
-    Sorry , we could not found ${ARCHIVETAR} on /${DESTINATION}
+    Sorry , we could not found ${ARCHIVETAR} on ${DESTINATION}
     You need to create a backup before you can restore
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
