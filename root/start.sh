@@ -52,7 +52,6 @@ DESTINATION="/mnt/downloads/appbackups"
 ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
 
 ## start ##
-
    echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
    if [[ ! -x "$(command -v rsync)" ]];then
       apk --quiet --no-cache --no-progress update && \
@@ -63,19 +62,23 @@ ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
       done
    fi
    if [[ ${PASSWORD} != "" ]];then passwordtar;fi
-   echo "Start tar for ${ARCHIVETAR}"
-      cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVETAR} ./
-   echo "Finished tar for ${ARCHIVE}"
-   if [[ ! -d ${DESTINATION} ]];then $(command -v mkdir) -p ${DESTINATION};fi
-      $(command -v rsync) -aq --info=progress2 -hv --remove-source-files ${ARCHIVEROOT}/${ARCHIVETAR} ${DESTINATION}/${ARCHIVETAR}
-      $(command -v chown) -hR 1000:1000 ${DESTINATION}/${ARCHIVETAR}
-   echo "Finished rsync for ${ARCHIVETAR} to ${DESTINATION}"
-   ## ENDING ##
-   ENDTIME=$(date +%s)
-   TIME="$((count=${ENDTIME}-${STARTTIME}))"
-   duration="$(($TIME / 60)) minutes and $(($TIME % 60)) seconds elapsed."
-   echo "${OPERATION} used ${duration} for ${OPERATION} ${ARCHIVE}"
+   if [[ ${PASSWORD} == "" ]];then
+      echo "Start tar for ${ARCHIVETAR}"
+         cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVETAR} ./
+      echo "Finished tar for ${ARCHIVE}"
+      if [[ ! -d ${DESTINATION} ]];then $(command -v mkdir) -p ${DESTINATION};fi
+         $(command -v rsync) -aq --info=progress2 -hv --remove-source-files ${ARCHIVEROOT}/${ARCHIVETAR} ${DESTINATION}/${ARCHIVETAR}
+         $(command -v chown) -hR 1000:1000 ${DESTINATION}/${ARCHIVETAR}
+      echo "Finished rsync for ${ARCHIVETAR} to ${DESTINATION}"
+      ## ENDING ##
+      ENDTIME=$(date +%s)
+      TIME="$((count=${ENDTIME}-${STARTTIME}))"
+      duration="$(($TIME / 60)) minutes and $(($TIME % 60)) seconds elapsed."
+      echo "${OPERATION} used ${duration} for ${OPERATION} ${ARCHIVE}"
+   fi
+   exit
 }
+
 passwordtar() {
 STARTTIME=$(date +%s)
 ## parser
@@ -100,9 +103,9 @@ ARCHIVEROOT="/${OPERATION}/"
    echo "${OPERATION} used ${duration} for ${OPERATION} ${PASSWORDTAR}"
 }
 
-
 ## restore specific app
 restore() {
+STARTTIME=$(date +%s)
 ## parser
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
@@ -111,7 +114,6 @@ DESTINATION="/mnt/unionfs/appbackups"
 ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
 
 ## start ##
-
    echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
    if [[ ! -f ${DESTINATION}/${ARCHIVETAR} ]];then noarchivefound;fi
    if [[ ! -x "$(command -v rsync)" ]];then
@@ -123,20 +125,52 @@ ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
       done
    fi
    if [[ ! -d ${ARCHIVEROOT} ]];then $(command -v mkdir) -p ${ARCHIVEROOT};fi
-      $(command -v rsync) -aq --info=progress2 -hv ${DESTINATION}/${ARCHIVETAR} ${ARCHIVEROOT}/${ARCHIVETAR}
+   if [[ ${PASSWORD} != "" ]];then restoreprotect;fi
+   if [[ ${PASSWORD} == "" ]];then
+         $(command -v rsync) -aq --info=progress2 -hv ${DESTINATION}/${ARCHIVETAR} ${ARCHIVEROOT}/${ARCHIVETAR}
+         $(command -v chown) -hR 1000:1000 ${DESTINATION}
+      echo "Finished rsync for ${ARCHIVETAR} from ${DESTINATION}"
+      if [[ ! -f ${ARCHIVEROOT}/${ARCHIVETAR} ]];then nolocalfound;fi
+      echo "Start untar for ${ARCHIVETAR} on ${ARCHIVEROOT}"
+         cd ${ARCHIVEROOT} && tar -xvf ${ARCHIVETAR}
+         $(command -v chown) -hR 1000:1000 ${ARCHIVEROOT}
+         $(command -v rm) -f ${ARCHIVEROOT}/${ARCHIVETAR}
+      echo "Finished untar for ${ARCHIVETAR}"
+      ## ENDING ##
+      ENDTIME=$(date +%s)
+      TIME="$((count=${ENDTIME}-${STARTTIME}))"
+      duration="$(($TIME / 60)) minutes and $(($TIME % 60)) seconds elapsed."
+      echo "${OPERATION} used ${duration} for ${OPERATION} ${ARCHIVE}"
+   fi
+   exit
+}
+
+restoreprotect() {
+STARTTIME=$(date +%s)
+## parser
+OPERATION=${OPERATION}
+ARCHIVE=${ARCHIVE}
+PASSWORD=${PASSWORD}
+PASSWORDTAR=${ARCHIVE}.tar.gz.enc
+DESTINATION="/mnt/downloads/appbackups"
+ARCHIVEROOT="/${OPERATION}/"
+
+   if [[ ! -d ${ARCHIVEROOT} ]];then $(command -v mkdir) -p ${ARCHIVEROOT};fi
+      $(command -v rsync) -aq --info=progress2 -hv ${DESTINATION}/${PASSWORDTAR} ${ARCHIVEROOT}/${PASSWORDTAR}
       $(command -v chown) -hR 1000:1000 ${DESTINATION}
-   echo "Finished rsync for ${ARCHIVETAR} from ${DESTINATION}"
-   if [[ ! -f ${ARCHIVEROOT}/${ARCHIVETAR} ]];then nolocalfound;fi
-   echo "Start untar for ${ARCHIVETAR} on ${ARCHIVEROOT}"
-      cd ${ARCHIVEROOT} && tar -xvf ${ARCHIVETAR}
+   echo "Finished rsync for ${PASSWORDTAR} from ${DESTINATION}"
+   if [[ ! -f ${ARCHIVEROOT}/${PASSWORDTAR} ]];then nolocalfound;fi
+   echo "Start protect-untar for ${PASSWORDTAR} on ${ARCHIVEROOT}"
+      cd ${ARCHIVEROOT} && openssl aes-256-cbc -pass pass:${PASSWORD} -d -in ${PASSWORDTAR} | tar xz
       $(command -v chown) -hR 1000:1000 ${ARCHIVEROOT}
-      $(command -v rm) -f ${ARCHIVEROOT}/${ARCHIVETAR}
-   echo "Finished untar for ${ARCHIVETAR}"
+      $(command -v rm) -f ${ARCHIVEROOT}/${PASSWORDTAR}
+   echo "Finished protect-untar for ${PASSWORDTAR}"
    ## ENDING ##
    ENDTIME=$(date +%s)
    TIME="$((count=${ENDTIME}-${STARTTIME}))"
    duration="$(($TIME / 60)) minutes and $(($TIME % 60)) seconds elapsed."
    echo "${OPERATION} used ${duration} for ${OPERATION} ${ARCHIVE}"
+   exit
 }
 
 noarchivefound() {
@@ -146,6 +180,7 @@ PASSWORD=${PASSWORD}
 ARCHIVETAR=${ARCHIVE}.tar.gz
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 DESTINATION="/mnt/unionfs/appbackups"
+
 if [[ ${PASSWORD} != "" ]];then
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
