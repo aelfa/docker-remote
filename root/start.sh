@@ -146,7 +146,7 @@ PASSWORD=${PASSWORD}
 ARCHIVETAR=${ARCHIVE}.tar.gz
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 DESTINATION="/mnt/unionfs/appbackups"
-if [[ ${PASSWORDTAR} != "" ]];then
+if [[ ${PASSWORD} != "" ]];then
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     ❌ ERROR
