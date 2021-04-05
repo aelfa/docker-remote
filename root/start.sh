@@ -185,14 +185,14 @@ if [[ ${PASSWORD} != "" ]];then
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     ❌ ERROR
-    Sorry , we could not found ${PASSWORDTAR} on ${DESTINATION}
+    Sorry , We could not find ${PASSWORDTAR} on ${DESTINATION}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
 else
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     ❌ ERROR
-    Sorry , we could not found ${ARCHIVETAR} on ${DESTINATION}
+    Sorry , We could not find ${ARCHIVETAR} on ${DESTINATION}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
 fi
@@ -211,14 +211,14 @@ if [[ ${PASSWORD} != "" ]];then
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     ❌ ERROR
-    Sorry , we could not found ${PASSWORDTAR} on ${ARCHIVEROOT}
+    Sorry , We could not find ${PASSWORDTAR} on ${ARCHIVEROOT}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
 else
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     ❌ ERROR
-    Sorry , we could not found ${ARCHIVETAR} on /${OPERATION}/${ARCHIVE}
+    Sorry , We could not find ${ARCHIVETAR} on /${OPERATION}/${ARCHIVE}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
 fi
@@ -250,8 +250,8 @@ else
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     ❌ ERROR
-    Sorry , we could not found ${ARCHIVETAR} on ${DESTINATION}
-    You need to create a backup before you can restore
+    Sorry , We could not find ${ARCHIVETAR} on ${DESTINATION}
+    You need to create a backup before you can restore it.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
    fi
@@ -272,7 +272,7 @@ tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     ❌ ERROR
     Sorry , we could not found ${PASSWORDTAR} on ${DESTINATION}
-    You need to create a backup before you can restore
+    You need to create a backup before you can restore.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
    fi
