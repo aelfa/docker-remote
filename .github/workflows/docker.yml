@@ -92,7 +92,7 @@ jobs:
           labels: |
             org.opencontainers.image.title=${{ steps.prep.outputs.title }}
             org.opencontainers.image.version=${{ steps.prep.outputs.version }}
-            org.opencontainers.image.created=${{ steps.prep.outputs.date }}
+            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
 
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v2
@@ -193,7 +193,7 @@ jobs:
           labels: |
             org.opencontainers.image.title=${{ steps.prep.outputs.title }}
             org.opencontainers.image.version=${{ steps.prep.outputs.version }}
-            org.opencontainers.image.created=${{ steps.prep.outputs.date }}
+            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
