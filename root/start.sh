@@ -61,7 +61,6 @@ ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
          apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
       done
    fi
-   if [[ ${PASSWORD} != "" ]];then passwordtar;fi
    echo "Start tar for ${ARCHIVETAR}"
        cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVETAR} ./
    echo "Finished tar for ${ARCHIVE}"
@@ -76,16 +75,27 @@ ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
    echo "${OPERATION} used ${duration} for ${OPERATION} ${ARCHIVE}"
 }
 
-passwordtar() {
+backuppw() {
 STARTTIME=$(date +%s)
 ## parser
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
 PASSWORD=${PASSWORD}
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
+ARCHIVETAR=${ARCHIVE}.tar.gz
 DESTINATION="/mnt/downloads/appbackups"
 ARCHIVEROOT="/${OPERATION}/"
 
+## start ##
+   echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
+   if [[ ! -x "$(command -v rsync)" ]];then
+      apk --quiet --no-cache --no-progress update && \
+      apk --quiet --no-cache --no-progress upgrade
+      inst="rsync bc pigz tar"
+      for i in ${inst};do
+         apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
+      done
+   fi
    echo "Start protect-tar for ${PASSWORDTAR}"
       cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -cz ${ARCHIVE}/ | openssl enc -aes-256-cbc -e -pass pass:${PASSWORD} > ${ARCHIVEROOT}/${PASSWORDTAR}
    echo "Finished protect-tar for ${PASSWORDTAR}"
@@ -124,7 +134,6 @@ ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
       done
    fi
    if [[ ! -d ${ARCHIVEROOT} ]];then $(command -v mkdir) -p ${ARCHIVEROOT};fi
-   if [[ ${PASSWORD} != "" ]];then restoreprotect;fi
        $(command -v rsync) -aq --info=progress2 -hv ${DESTINATION}/${ARCHIVETAR} ${ARCHIVEROOT}/${ARCHIVETAR}
        $(command -v chown) -hR 1000:1000 ${ARCHIVEROOT}
    echo "Finished rsync for ${ARCHIVETAR} from ${DESTINATION}"
@@ -141,7 +150,7 @@ ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
    echo "${OPERATION} used ${duration} for ${OPERATION} ${ARCHIVE}"
 }
 
-restoreprotect() {
+restorepw() {
 STARTTIME=$(date +%s)
 ## parser
 OPERATION=${OPERATION}
@@ -150,12 +159,22 @@ PASSWORD=${PASSWORD}
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 DESTINATION="/mnt/downloads/appbackups"
 ARCHIVEROOT="/${OPERATION}/"
-
+## start ##
+   echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
+   if [[ ! -f ${DESTINATION}/${ARCHIVETAR} ]];then noarchivefoundpw;fi
+   if [[ ! -x "$(command -v rsync)" ]];then
+      apk --quiet --no-cache --no-progress update && \
+      apk --quiet --no-cache --no-progress upgrade
+      inst="rsync bc tar"
+      for i in ${inst};do
+         apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
+      done
+   fi
    if [[ ! -d ${ARCHIVEROOT} ]];then $(command -v mkdir) -p ${ARCHIVEROOT};fi
       $(command -v rsync) -aq --info=progress2 -hv ${DESTINATION}/${PASSWORDTAR} ${ARCHIVEROOT}/${PASSWORDTAR}
       $(command -v chown) -hR 1000:1000 ${DESTINATION}
    echo "Finished rsync for ${PASSWORDTAR} from ${DESTINATION}"
-   if [[ ! -f ${ARCHIVEROOT}/${PASSWORDTAR} ]];then nolocalfound;fi
+   if [[ ! -f ${ARCHIVEROOT}/${PASSWORDTAR} ]];then nolocalfoundpw;fi
    echo "Start protect-untar for ${PASSWORDTAR} on ${ARCHIVEROOT}"
       cd ${ARCHIVEROOT} && openssl aes-256-cbc -pass pass:${PASSWORD} -d -in ${PASSWORDTAR} | tar xz
       $(command -v chown) -hR 1000:1000 ${ARCHIVEROOT}
@@ -169,6 +188,21 @@ ARCHIVEROOT="/${OPERATION}/"
    exit
 }
 
+noarchivefoundpw() {
+OPERATION=${OPERATION}
+ARCHIVE=${ARCHIVE}
+PASSWORD=${PASSWORD}
+ARCHIVETAR=${ARCHIVE}.tar.gz
+PASSWORDTAR=${ARCHIVE}.tar.gz.enc
+DESTINATION="/mnt/unionfs/appbackups"
+tee <<-EOF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    ❌ ERROR
+    Sorry , We could not find ${PASSWORDTAR} on ${DESTINATION}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EOF
+sleep 10 && exit
+}
 noarchivefound() {
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
@@ -176,48 +210,41 @@ PASSWORD=${PASSWORD}
 ARCHIVETAR=${ARCHIVE}.tar.gz
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 DESTINATION="/mnt/unionfs/appbackups"
-
-if [[ ${PASSWORD} != "" ]];then
-tee <<-EOF
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    ❌ ERROR
-    Sorry , We could not find ${PASSWORDTAR} on ${DESTINATION}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-EOF
-else
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     ❌ ERROR
     Sorry , We could not find ${ARCHIVETAR} on ${DESTINATION}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-fi
 sleep 10 && exit
 }
 
-nolocalfound() {
+nolocalfoundpw() {
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
 PASSWORD=${PASSWORD}
-ARCHIVETAR=${ARCHIVE}.tar.gz
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 ARCHIVEROOT="/${OPERATION}/"
-
-if [[ ${PASSWORD} != "" ]];then
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     ❌ ERROR
     Sorry , We could not find ${PASSWORDTAR} on ${ARCHIVEROOT}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-else
+sleep 10 && exit
+}
+nolocalfound() {
+OPERATION=${OPERATION}
+ARCHIVE=${ARCHIVE}
+PASSWORD=${PASSWORD}
+ARCHIVETAR=${ARCHIVE}.tar.gz
+ARCHIVEROOT="/${OPERATION}/"
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     ❌ ERROR
     Sorry , We could not find ${ARCHIVETAR} on /${OPERATION}/${ARCHIVE}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-fi
 sleep 10 && exit
 }
 
@@ -232,9 +259,8 @@ PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 DESTINATION="/mnt/unionfs/appbackups"
 
 ## start ##
-if [[ ${PASSWORD} == "" ]];then
-   echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
-   if [[ -f ${DESTINATION}/${ARCHIVETAR} ]];then
+echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
+if [[ -f ${DESTINATION}/${ARCHIVETAR} ]];then
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     👍
@@ -250,12 +276,20 @@ tee <<-EOF
     You need to create a backup before you can restore it.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-   fi
 sleep 10 && exit
 fi
-if [[ ${PASSWORD} != "" ]];then
-   echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
-   if [[ -f ${DESTINATION}/${PASSWORDTAR} ]];then
+}
+checkpw() {
+## parser
+OPERATION=${OPERATION}
+ARCHIVE=${ARCHIVE}
+PASSWORD=${PASSWORD}
+ARCHIVETAR=${ARCHIVE}.tar.gz
+PASSWORDTAR=${ARCHIVE}.tar.gz.enc
+DESTINATION="/mnt/unionfs/appbackups"
+
+echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
+if [[ -f ${DESTINATION}/${PASSWORDTAR} ]];then
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     👍
@@ -271,7 +305,6 @@ tee <<-EOF
     You need to create a backup before you can restore.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-   fi
 sleep 10 && exit
 fi
 }
@@ -285,10 +318,21 @@ OPERATION=$1
 ARCHIVE=$2
 PASSWORD=$3
 
-# RUNNER #
+# RUN NO-PROTECTION #
+if [[ $# -eq 2 ]];then
+case "$OPERATION" in
+ "backup" ) backuppw ;;
+ "check" ) checkpw ;;
+ "restore" ) restorepw ;;
+ * ) usage ;;
+esac
+fi
+# RUN PROTECTION #
+if [[ $# -eq 3 ]];then
 case "$OPERATION" in
  "backup" ) backup ;;
  "check" ) check ;;
  "restore" ) restore ;;
  * ) usage ;;
 esac
+fi
