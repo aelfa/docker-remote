@@ -324,15 +324,14 @@ case "$OPERATION" in
  "backup" ) backuppw ;;
  "check" ) checkpw ;;
  "restore" ) restorepw ;;
- * ) usage ;;
 esac
 fi
+
 # RUN PROTECTION #
 if [[ $# -eq 3 ]];then
 case "$OPERATION" in
  "backup" ) backup ;;
  "check" ) check ;;
  "restore" ) restore ;;
- * ) usage ;;
 esac
 fi
