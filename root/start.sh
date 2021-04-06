@@ -97,7 +97,7 @@ ARCHIVEROOT="/${OPERATION}/"
       done
    fi
    echo "Start protect-tar for ${PASSWORDTAR}"
-      cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -cz ${ARCHIVE}/ | openssl enc -aes-256-cbc -e -pass pass:${PASSWORD} > ${ARCHIVEROOT}/${PASSWORDTAR}
+      cd ${ARCHIVEROOT} && tar ${OPTIONSTARPW} -cz ${ARCHIVE}/ | openssl enc -aes-256-cbc -e -pass pass:${PASSWORD} > ${ARCHIVEROOT}/${PASSWORDTAR}
    echo "Finished protect-tar for ${PASSWORDTAR}"
    if [[ ! -d ${DESTINATION} ]];then $(command -v mkdir) -p ${DESTINATION};fi
       $(command -v rsync) -aq --info=progress2 -hv --remove-source-files ${ARCHIVEROOT}/${PASSWORDTAR} ${DESTINATION}/${PASSWORDTAR}
