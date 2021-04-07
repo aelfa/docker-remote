@@ -20,4 +20,4 @@ RUN \
   rm -f /var/cache/apk/*
 
 COPY root/ /
-ENTRYPOINT [ "/bin/sh", "/start.sh" ]
+ENTRYPOINT [ "/bin/bash", "/start.sh" ]
