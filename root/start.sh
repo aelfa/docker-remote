@@ -318,8 +318,8 @@ OPERATION=$1
 ARCHIVE=$2
 PASSWORD=$3
 
-# RUN NO-PROTECTION #
-if [[ $# -eq 2 ]];then
+# RUN PROTECTION #
+if [[ $# -eq 3 ]];then
 case "$OPERATION" in
  "backup" ) backuppw ;;
  "check" ) checkpw ;;
@@ -327,8 +327,8 @@ case "$OPERATION" in
 esac
 fi
 
-# RUN PROTECTION #
-if [[ $# -eq 3 ]];then
+# RUN NO-PROTECTION #
+if [[ $# -eq 2 ]];then
 case "$OPERATION" in
  "backup" ) backup ;;
  "check" ) check ;;
