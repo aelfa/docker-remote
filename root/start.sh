@@ -49,7 +49,6 @@ PASSWORD=${PASSWORD}
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 ARCHIVETAR=${ARCHIVE}.tar.gz
 DESTINATION="/mnt/downloads/appbackups"
-ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
 
 ## start ##
    echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
@@ -62,10 +61,10 @@ ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
       done
    fi
    echo "Start tar for ${ARCHIVETAR}"
-       cd ${ARCHIVEROOT} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVETAR} ./
+       cd /${OPERATION}/${ARCHIVE} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVETAR} ./
    echo "Finished tar for ${ARCHIVE}"
    if [[ ! -d ${DESTINATION} ]];then $(command -v mkdir) -p ${DESTINATION};fi
-      $(command -v rsync) -aq --info=progress2 -hv --remove-source-files ${ARCHIVEROOT}/${ARCHIVETAR} ${DESTINATION}/${ARCHIVETAR}
+      $(command -v rsync) -aq --info=progress2 -hv --remove-source-files /${OPERATION}/${ARCHIVE}/${ARCHIVETAR} ${DESTINATION}/${ARCHIVETAR}
       $(command -v chown) -hR 1000:1000 ${DESTINATION}/${ARCHIVETAR}
    echo "Finished rsync for ${ARCHIVETAR} to ${DESTINATION}"
    ## ENDING ##
@@ -84,7 +83,6 @@ PASSWORD=${PASSWORD}
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 ARCHIVETAR=${ARCHIVE}.tar.gz
 DESTINATION="/mnt/downloads/appbackups"
-ARCHIVEROOT="/${OPERATION}/"
 
 ## start ##
    echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
@@ -97,10 +95,10 @@ ARCHIVEROOT="/${OPERATION}/"
       done
    fi
    echo "Start protect-tar for ${PASSWORDTAR}"
-      cd ${ARCHIVEROOT} && tar ${OPTIONSTARPW} -cz ${ARCHIVE}/ | openssl enc -aes-256-cbc -e -pass pass:${PASSWORD} > ${ARCHIVEROOT}/${PASSWORDTAR}
+      cd /${OPERATION}/${ARCHIVE} && tar ${OPTIONSTARPW} -cz ${ARCHIVE}/ | openssl enc -aes-256-cbc -e -pass pass:${PASSWORD} > ${ARCHIVEROOT}/${PASSWORDTAR}
    echo "Finished protect-tar for ${PASSWORDTAR}"
    if [[ ! -d ${DESTINATION} ]];then $(command -v mkdir) -p ${DESTINATION};fi
-      $(command -v rsync) -aq --info=progress2 -hv --remove-source-files ${ARCHIVEROOT}/${PASSWORDTAR} ${DESTINATION}/${PASSWORDTAR}
+      $(command -v rsync) -aq --info=progress2 -hv --remove-source-files /${OPERATION}/${ARCHIVE}/${PASSWORDTAR} ${DESTINATION}/${PASSWORDTAR}
       $(command -v chown) -hR 1000:1000 ${DESTINATION}/${PASSWORDTAR}
    echo "Finished rsync for ${PASSWORDTAR} to ${DESTINATION}"
    ## ENDING ##
@@ -120,7 +118,6 @@ ARCHIVETAR=${ARCHIVE}.tar.gz
 PASSWORD=${PASSWORD}
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 DESTINATION="/mnt/unionfs/appbackups"
-ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
 
 ## start ##
    echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
@@ -133,15 +130,15 @@ ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
          apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
       done
    fi
-   if [[ ! -d ${ARCHIVEROOT} ]];then $(command -v mkdir) -p ${ARCHIVEROOT};fi
-       $(command -v rsync) -aq --info=progress2 -hv ${DESTINATION}/${ARCHIVETAR} ${ARCHIVEROOT}/${ARCHIVETAR}
-       $(command -v chown) -hR 1000:1000 ${ARCHIVEROOT}
+   if [[ ! -d /${OPERATION}/${ARCHIVE} ]];then $(command -v mkdir) -p ${ARCHIVEROOT};fi
+       $(command -v rsync) -aq --info=progress2 -hv ${DESTINATION}/${ARCHIVETAR} /${OPERATION}/${ARCHIVE}/${ARCHIVETAR}
+       $(command -v chown) -hR 1000:1000 /${OPERATION}/${ARCHIVE}
    echo "Finished rsync for ${ARCHIVETAR} from ${DESTINATION}"
    if [[ ! -f ${ARCHIVEROOT}/${ARCHIVETAR} ]];then nolocalfound;fi
    echo "Start untar for ${ARCHIVETAR} on ${ARCHIVEROOT}"
-      cd ${ARCHIVEROOT}/ && tar -zxvf ${ARCHIVETAR}
-      $(command -v chown) -hR 1000:1000 ${ARCHIVEROOT}
-      $(command -v rm) -f ${ARCHIVEROOT}/${ARCHIVETAR}
+      cd /${OPERATION}/${ARCHIVE}/ && tar -zxvf ${ARCHIVETAR}
+      $(command -v chown) -hR 1000:1000 /${OPERATION}/${ARCHIVE}
+      $(command -v rm) -f /${OPERATION}/${ARCHIVE}/${ARCHIVETAR}
    echo "Finished untar for ${ARCHIVETAR}"
    ## ENDING ##
    ENDTIME=$(date +%s)
@@ -158,7 +155,7 @@ ARCHIVE=${ARCHIVE}
 PASSWORD=${PASSWORD}
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 DESTINATION="/mnt/downloads/appbackups"
-ARCHIVEROOT="/${OPERATION}/"
+
 ## start ##
    echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
    if [[ ! -f ${DESTINATION}/${ARCHIVETAR} ]];then noarchivefoundpw;fi
@@ -170,15 +167,15 @@ ARCHIVEROOT="/${OPERATION}/"
          apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
       done
    fi
-   if [[ ! -d ${ARCHIVEROOT} ]];then $(command -v mkdir) -p ${ARCHIVEROOT};fi
-      $(command -v rsync) -aq --info=progress2 -hv ${DESTINATION}/${PASSWORDTAR} ${ARCHIVEROOT}/${PASSWORDTAR}
+   if [[ ! -d /${OPERATION}/${ARCHIVE} ]];then $(command -v mkdir) -p ${ARCHIVEROOT};fi
+      $(command -v rsync) -aq --info=progress2 -hv ${DESTINATION}/${PASSWORDTAR} /${OPERATION}/${ARCHIVE}/${PASSWORDTAR}
       $(command -v chown) -hR 1000:1000 ${DESTINATION}
    echo "Finished rsync for ${PASSWORDTAR} from ${DESTINATION}"
-   if [[ ! -f ${ARCHIVEROOT}/${PASSWORDTAR} ]];then nolocalfoundpw;fi
+   if [[ ! -f /${OPERATION}/${ARCHIVE}/${PASSWORDTAR} ]];then nolocalfoundpw;fi
    echo "Start protect-untar for ${PASSWORDTAR} on ${ARCHIVEROOT}"
-      cd ${ARCHIVEROOT}/ && openssl aes-256-cbc -pass pass:${PASSWORD} -d -in ${PASSWORDTAR} | tar xzvf
+      cd /${OPERATION}/${ARCHIVE}/ && openssl aes-256-cbc -pass pass:${PASSWORD} -d -in ${PASSWORDTAR} | tar xzvf
       $(command -v chown) -hR 1000:1000 ${ARCHIVEROOT}
-      $(command -v rm) -f ${ARCHIVEROOT}/${PASSWORDTAR}
+      $(command -v rm) -f /${OPERATION}/${ARCHIVE}/${PASSWORDTAR}
    echo "Finished protect-untar for ${PASSWORDTAR}"
    ## ENDING ##
    ENDTIME=$(date +%s)
@@ -224,11 +221,10 @@ OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
 PASSWORD=${PASSWORD}
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
-ARCHIVEROOT="/${OPERATION}/"
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     ❌ ERROR
-    Sorry , We could not find ${PASSWORDTAR} on ${ARCHIVEROOT}
+    Sorry , We could not find ${PASSWORDTAR} on /${OPERATION}/${ARCHIVE}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
 sleep 10 && exit
@@ -238,7 +234,6 @@ OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
 PASSWORD=${PASSWORD}
 ARCHIVETAR=${ARCHIVE}.tar.gz
-ARCHIVEROOT="/${OPERATION}/"
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     ❌ ERROR
