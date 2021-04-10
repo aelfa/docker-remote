@@ -61,7 +61,7 @@ DESTINATION="/mnt/downloads/appbackups"
       done
    fi
    echo "Start tar for ${ARCHIVETAR}"
-       cd /${OPERATION}/${ARCHIVE} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVETAR} ./
+      cd /${OPERATION}/${ARCHIVE} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVETAR} ./
    echo "Finished tar for ${ARCHIVE}"
    if [[ ! -d ${DESTINATION} ]];then $(command -v mkdir) -p ${DESTINATION};fi
       $(command -v rsync) -aq --info=progress2 -hv --remove-source-files /${OPERATION}/${ARCHIVE}/${ARCHIVETAR} ${DESTINATION}/${ARCHIVETAR}
@@ -131,8 +131,8 @@ DESTINATION="/mnt/unionfs/appbackups"
       done
    fi
    if [[ ! -d /${OPERATION}/${ARCHIVE} ]];then $(command -v mkdir) -p ${ARCHIVEROOT};fi
-       $(command -v rsync) -aq --info=progress2 -hv ${DESTINATION}/${ARCHIVETAR} /${OPERATION}/${ARCHIVE}/${ARCHIVETAR}
-       $(command -v chown) -hR 1000:1000 /${OPERATION}/${ARCHIVE}
+      $(command -v rsync) -aq --info=progress2 -hv ${DESTINATION}/${ARCHIVETAR} /${OPERATION}/${ARCHIVE}/${ARCHIVETAR}
+      $(command -v chown) -hR 1000:1000 /${OPERATION}/${ARCHIVE}
    echo "Finished rsync for ${ARCHIVETAR} from ${DESTINATION}"
    if [[ ! -f ${ARCHIVEROOT}/${ARCHIVETAR} ]];then nolocalfound;fi
    echo "Start untar for ${ARCHIVETAR} on ${ARCHIVEROOT}"
