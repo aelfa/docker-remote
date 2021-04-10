@@ -139,7 +139,7 @@ ARCHIVEROOT="/${OPERATION}/${ARCHIVE}"
    echo "Finished rsync for ${ARCHIVETAR} from ${DESTINATION}"
    if [[ ! -f ${ARCHIVEROOT}/${ARCHIVETAR} ]];then nolocalfound;fi
    echo "Start untar for ${ARCHIVETAR} on ${ARCHIVEROOT}"
-      cd ${ARCHIVEROOT} && tar -xvf ${ARCHIVETAR}
+      cd ${ARCHIVEROOT}/ && tar -zxvf ${ARCHIVETAR}
       $(command -v chown) -hR 1000:1000 ${ARCHIVEROOT}
       $(command -v rm) -f ${ARCHIVEROOT}/${ARCHIVETAR}
    echo "Finished untar for ${ARCHIVETAR}"
@@ -176,7 +176,7 @@ ARCHIVEROOT="/${OPERATION}/"
    echo "Finished rsync for ${PASSWORDTAR} from ${DESTINATION}"
    if [[ ! -f ${ARCHIVEROOT}/${PASSWORDTAR} ]];then nolocalfoundpw;fi
    echo "Start protect-untar for ${PASSWORDTAR} on ${ARCHIVEROOT}"
-      cd ${ARCHIVEROOT} && openssl aes-256-cbc -pass pass:${PASSWORD} -d -in ${PASSWORDTAR} | tar xz
+      cd ${ARCHIVEROOT}/ && openssl aes-256-cbc -pass pass:${PASSWORD} -d -in ${PASSWORDTAR} | tar xzvf
       $(command -v chown) -hR 1000:1000 ${ARCHIVEROOT}
       $(command -v rm) -f ${ARCHIVEROOT}/${PASSWORDTAR}
    echo "Finished protect-untar for ${PASSWORDTAR}"
