@@ -130,12 +130,12 @@ DESTINATION="/mnt/unionfs/appbackups"
          apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
       done
    fi
-   if [[ ! -d /${OPERATION}/${ARCHIVE} ]];then $(command -v mkdir) -p ${ARCHIVEROOT};fi
+   if [[ ! -d /${OPERATION}/${ARCHIVE} ]];then $(command -v mkdir) -p /${OPERATION}/${ARCHIVE};fi
       $(command -v rsync) -aq --info=progress2 -hv ${DESTINATION}/${ARCHIVETAR} /${OPERATION}/${ARCHIVE}/${ARCHIVETAR}
       $(command -v chown) -hR 1000:1000 /${OPERATION}/${ARCHIVE}
    echo "Finished rsync for ${ARCHIVETAR} from ${DESTINATION}"
-   if [[ ! -f ${ARCHIVEROOT}/${ARCHIVETAR} ]];then nolocalfound;fi
-   echo "Start untar for ${ARCHIVETAR} on ${ARCHIVEROOT}"
+   if [[ ! -f /${OPERATION}/${ARCHIVE}/${ARCHIVETAR} ]];then nolocalfound;fi
+   echo "Start untar for ${ARCHIVETAR} on /${OPERATION}/${ARCHIVE}"
       cd /${OPERATION}/${ARCHIVE}/ && tar -zxvf ${ARCHIVETAR}
       $(command -v chown) -hR 1000:1000 /${OPERATION}/${ARCHIVE}
       $(command -v rm) -f /${OPERATION}/${ARCHIVE}/${ARCHIVETAR}
