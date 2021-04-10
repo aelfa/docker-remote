@@ -1,5 +1,5 @@
-#!/usr/bin/with-contenv sh
-# shellcheck shell=sh
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
 # Copyright (c) 2021, MrDoob
 # All rights reserved
 # Idee from scorb/docker-volume-backup
