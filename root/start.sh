@@ -7,6 +7,7 @@
 # fork allowing: yes
 # modification allowed: yes
 ######
+
 #FUNCTIONS START
 OPTIONSTAR="--warning=no-file-changed \
   --ignore-failed-read \
