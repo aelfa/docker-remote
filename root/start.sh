@@ -7,7 +7,6 @@
 # fork allowing: yes
 # modification allowed: yes
 ######
-
 #FUNCTIONS START
 OPTIONSTAR="--warning=no-file-changed \
   --ignore-failed-read \
@@ -15,14 +14,12 @@ OPTIONSTAR="--warning=no-file-changed \
   --warning=no-file-removed \
   --exclude-from=/backup_excludes \
   --use-compress-program=pigz"
-
 OPTIONSTARPW="--warning=no-file-changed \
   --ignore-failed-read \
   --absolute-names \
   --warning=no-file-removed \
   --exclude-from=/backup_excludes"
 #FUNCTIONS END
-
 usage() {
   echo ""
   echo "Usage: <backup|restore|check> <appname> || <password>"
@@ -39,7 +36,6 @@ usage() {
   echo ""
   exit
 }
-
 ## backup specific app
 backup() {
 STARTTIME=$(date +%s)
@@ -50,7 +46,6 @@ PASSWORD=${PASSWORD}
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 ARCHIVETAR=${ARCHIVE}.tar.gz
 DESTINATION="/mnt/downloads/appbackups"
-
 ## start ##
    echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
    if [[ ! -x "$(command -v rsync)" ]];then
@@ -74,7 +69,6 @@ DESTINATION="/mnt/downloads/appbackups"
    duration="$(($TIME / 60)) minutes and $(($TIME % 60)) seconds elapsed."
    echo "${OPERATION} used ${duration} for ${OPERATION} ${ARCHIVE}"
 }
-
 backuppw() {
 STARTTIME=$(date +%s)
 ## parser
@@ -84,7 +78,6 @@ PASSWORD=${PASSWORD}
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 ARCHIVETAR=${ARCHIVE}.tar.gz
 DESTINATION="/mnt/downloads/appbackups"
-
 ## start ##
    echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
    if [[ ! -x "$(command -v rsync)" ]];then
@@ -108,7 +101,6 @@ DESTINATION="/mnt/downloads/appbackups"
    duration="$(($TIME / 60)) minutes and $(($TIME % 60)) seconds elapsed."
    echo "${OPERATION} used ${duration} for ${OPERATION} ${PASSWORDTAR}"
 }
-
 ## restore specific app
 restore() {
 STARTTIME=$(date +%s)
@@ -119,7 +111,6 @@ ARCHIVETAR=${ARCHIVE}.tar.gz
 PASSWORD=${PASSWORD}
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 DESTINATION="/mnt/unionfs/appbackups"
-
 ## start ##
    echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
    if [[ ! -f ${DESTINATION}/${ARCHIVETAR} ]];then noarchivefound;fi
@@ -147,7 +138,6 @@ DESTINATION="/mnt/unionfs/appbackups"
    duration="$(($TIME / 60)) minutes and $(($TIME % 60)) seconds elapsed."
    echo "${OPERATION} used ${duration} for ${OPERATION} ${ARCHIVE}"
 }
-
 restorepw() {
 STARTTIME=$(date +%s)
 ## parser
@@ -156,7 +146,6 @@ ARCHIVE=${ARCHIVE}
 PASSWORD=${PASSWORD}
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 DESTINATION="/mnt/downloads/appbackups"
-
 ## start ##
    echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
    if [[ ! -f ${DESTINATION}/${ARCHIVETAR} ]];then noarchivefoundpw;fi
@@ -185,7 +174,6 @@ DESTINATION="/mnt/downloads/appbackups"
    echo "${OPERATION} used ${duration} for ${OPERATION} ${ARCHIVE}"
    exit
 }
-
 noarchivefoundpw() {
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
@@ -216,7 +204,6 @@ tee <<-EOF
 EOF
 sleep 10 && exit
 }
-
 nolocalfoundpw() {
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
@@ -243,7 +230,6 @@ tee <<-EOF
 EOF
 sleep 10 && exit
 }
-
 ## check specific app of existing
 check() {
 ## parser
@@ -253,7 +239,6 @@ PASSWORD=${PASSWORD}
 ARCHIVETAR=${ARCHIVE}.tar.gz
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 DESTINATION="/mnt/unionfs/appbackups"
-
 ## start ##
 echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
 if [[ -f ${DESTINATION}/${ARCHIVETAR} ]];then
@@ -283,7 +268,6 @@ PASSWORD=${PASSWORD}
 ARCHIVETAR=${ARCHIVE}.tar.gz
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 DESTINATION="/mnt/unionfs/appbackups"
-
 echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE}"
 if [[ -f ${DESTINATION}/${PASSWORDTAR} ]];then
 tee <<-EOF
@@ -304,16 +288,13 @@ EOF
 sleep 10 && exit
 fi
 }
-
 # CHECK ARE 2 ARGUMENTES #
 if [[ $# -lt 2 ]];then usage;fi
 if [[ $# -gt 3 ]];then usage;fi 
-
 # ARGUMENTES #
 OPERATION=$1
 ARCHIVE=$2
 PASSWORD=$3
-
 # RUN PROTECTION #
 if [[ $# -eq 3 ]];then
 case "$OPERATION" in
@@ -322,7 +303,6 @@ case "$OPERATION" in
  "restore" ) restorepw ;;
 esac
 fi
-
 # RUN NO-PROTECTION #
 if [[ $# -eq 2 ]];then
 case "$OPERATION" in
