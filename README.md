@@ -3,14 +3,29 @@ docker backup / restore for remote and local
 
 ## Docker run commands
 
----
+----
 
+## Commands explains
+
+```
+APPNAME = App to backup ( sample sonarr )
+STORAGE = name of specifi folder ( sample server01 || myplex || what_you_want ) 
+PASSWORD = password what you want ( dont miss them || no storing of any password plain )
+           ( password will be openssl enc -aes-256-cbc crypted )
+		   
+Backup  Storage = /mnt/downloads/appbackups/${STORAGE}/${APPNAME}
+Restore Storage = /mnt/unionfs/appbackups/${STORAGE}/${APPNAME}
+
+```
+
+----
+ 
 ## Backup Docker (no protected backup)
 ```
 $(command -v docker) run --rm \
   -v /opt/appdata:/backup/{APPNAME} \
   -v /mnt:/mnt \
-  ghcr.io/doob187/docker-remote:latest backup {APPNAME}
+  ghcr.io/doob187/docker-remote:latest backup {APPNAME} {STORAGE} 
 ```
 
 ## Backup Docker (protected backup)
@@ -18,17 +33,17 @@ $(command -v docker) run --rm \
 $(command -v docker) run --rm \
   -v /opt/appdata:/backup/{APPNAME} \
   -v /mnt:/mnt \
-  ghcr.io/doob187/docker-remote:latest backup {APPNAME} {PASSWORD}
+  ghcr.io/doob187/docker-remote:latest backup {APPNAME} {STORAGE} {PASSWORD}
 ```
 
----
+----
 
 ## Restore Docker (no protected backup)
 ```
 $(command -v docker) run --rm \
   -v /opt/appdata:/restore \
   -v /mnt:/mnt \
-  ghcr.io/doob187/docker-remote:latest restore {APPNAME}
+  ghcr.io/doob187/docker-remote:latest restore {APPNAME} {STORAGE} 
 ```
 
 ## Restore Docker (protected backup)
@@ -36,33 +51,34 @@ $(command -v docker) run --rm \
 $(command -v docker) run --rm \
   -v /opt/appdata:/restore \
   -v /mnt:/mnt \
-  ghcr.io/doob187/docker-remote:latest restore {APPNAME} {PASSWORD}
+  ghcr.io/doob187/docker-remote:latest restore {APPNAME} {STORAGE}  {PASSWORD}
 ```
 
----
+----
 
 ## check Docker (no protected backup)
 ```
 $(command -v docker) run --rm \
   -v /mnt:/mnt \
-  ghcr.io/doob187/docker-remote:latest check {APPNAME}
+  ghcr.io/doob187/docker-remote:latest check {APPNAME} {STORAGE} 
 ```
 
 ## check Docker (protected backup)
 ```
 $(command -v docker) run --rm \
   -v /mnt:/mnt \
-  ghcr.io/doob187/docker-remote:latest check {APPNAME} {PASSWORD}
+  ghcr.io/doob187/docker-remote:latest check {APPNAME} {STORAGE} {PASSWORD}
 ```
 
+----
 
----
 ## show usage menu
 ```
 $(command -v docker) run --rm \
   ghcr.io/doob187/docker-remote:latest usage
 ```
 
+----
 
 ## Contributors ✨
 
@@ -80,4 +96,24 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
+
+----
+
+## LICENSE
+```
+
+##################################
+# Copyright (c) 2021,  : MrDoob  #
+# Docker owner         : doob187 #
+# Docker Maintainer    : doob187 #
+# Code owner           : doob187 #
+#     All rights reserved        #
+##################################
+# THIS DOCKER IS UNDER LICENSE   #
+# CUSTOMIZING IS ALLOWED         #
+# REBRANDING IS NOT ALLOWED      #
+# CODE MIRRORING IS ALLOWED      #
+##################################
+ 
+```
 
