@@ -1,6 +1,18 @@
 # docker-remote
 docker backup / restore for remote and local
 
+## FYI
+
+```
+So if you see a broken part plz report it here
+           over githube issues
+           or on the Discord
+
+   All the Contributors you can see at the end 
+
+```
+
+
 ## Docker run commands
 
 ----
