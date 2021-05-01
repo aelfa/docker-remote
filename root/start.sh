@@ -52,13 +52,13 @@ STORAGE=${STORAGE}
    if [[ ! -x "$(command -v rsync)" ]];then
       apk --quiet --no-cache --no-progress update && \
       apk --quiet --no-cache --no-progress upgrade
-      inst="rsync bc pigz tar"
+      inst="rsync bc pigz tar pv"
       for i in ${inst};do
          apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
       done
    fi
    echo "Start tar for ${ARCHIVETAR}"
-      cd /${OPERATION}/${ARCHIVE} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVETAR} ./
+      cd /${OPERATION}/${ARCHIVE} && tar ${OPTIONSTAR} -C ${ARCHIVE} -czf ${ARCHIVETAR} ./ 
    echo "Finished tar for ${ARCHIVE}"
    if [[ ! -d ${DESTINATION}/${STORAGE} ]];then $(command -v mkdir) -p ${DESTINATION}/${STORAGE};fi
       $(command -v rsync) -aq --info=progress2 -hv --remove-source-files /${OPERATION}/${ARCHIVE}/${ARCHIVETAR} ${DESTINATION}/${STORAGE}/${ARCHIVETAR}
@@ -85,7 +85,7 @@ DESTINATION="/mnt/downloads/appbackups"
    if [[ ! -x "$(command -v rsync)" ]];then
       apk --quiet --no-cache --no-progress update && \
       apk --quiet --no-cache --no-progress upgrade
-      inst="rsync bc pigz tar"
+      inst="rsync bc pigz tar pv"
       for i in ${inst};do
          apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
       done
@@ -120,7 +120,7 @@ DESTINATION="/mnt/unionfs/appbackups"
    if [[ ! -x "$(command -v rsync)" ]];then
       apk --quiet --no-cache --no-progress update && \
       apk --quiet --no-cache --no-progress upgrade
-      inst="rsync bc tar"
+      inst="rsync bc pigz tar pv"
       for i in ${inst};do
          apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
       done
@@ -131,7 +131,7 @@ DESTINATION="/mnt/unionfs/appbackups"
    echo "Finished rsync for ${ARCHIVETAR} from ${DESTINATION}"
    if [[ ! -f /${OPERATION}/${ARCHIVE}/${ARCHIVETAR} ]];then nolocalfound;fi
    echo "Start untar for ${ARCHIVETAR} on /${OPERATION}/${ARCHIVE}"
-      cd /${OPERATION}/${ARCHIVE}/ && tar -zxvf ${ARCHIVETAR}
+      cd /${OPERATION}/${ARCHIVE}/ && pigz -dc ${ARCHIVETAR} | pv | tar xf -
       $(command -v chown) -hR 1000:1000 /${OPERATION}/${ARCHIVE}
       $(command -v rm) -f /${OPERATION}/${ARCHIVE}/${ARCHIVETAR}
    echo "Finished untar for ${ARCHIVETAR}"
@@ -156,7 +156,7 @@ DESTINATION="/mnt/unionfs/appbackups"
    if [[ ! -x "$(command -v rsync)" ]];then
       apk --quiet --no-cache --no-progress update && \
       apk --quiet --no-cache --no-progress upgrade
-      inst="rsync bc tar"
+      inst="rsync bc pigz tar pv"
       for i in ${inst};do
          apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
       done
@@ -167,7 +167,7 @@ DESTINATION="/mnt/unionfs/appbackups"
    echo "Finished rsync for ${PASSWORDTAR} from ${DESTINATION}"
    if [[ ! -f /${OPERATION}/${ARCHIVE}/${PASSWORDTAR} ]];then nolocalfoundpw;fi
    echo "Start protect-untar for ${PASSWORDTAR} on ${ARCHIVEROOT}"
-      cd /${OPERATION}/${ARCHIVE}/ && openssl aes-256-cbc -pass pass:${PASSWORD} -d -in ${PASSWORDTAR} | tar xzvf
+      cd /${OPERATION}/${ARCHIVE}/ && openssl aes-256-cbc -pass pass:${PASSWORD} -d -in ${PASSWORDTAR} | pigz -dc ${ARCHIVETAR} | tar xf -
       $(command -v chown) -hR 1000:1000 ${ARCHIVEROOT}
       $(command -v rm) -f /${OPERATION}/${ARCHIVE}/${PASSWORDTAR}
    echo "Finished protect-untar for ${PASSWORDTAR}"
