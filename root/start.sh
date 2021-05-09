@@ -1,6 +1,6 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
-# Copyright (c) 2021, MrDoob
+# Copyright (c) 2021, dockserver
 # All rights reserved
 # Idee from scorb/docker-volume-backup
 # customizable: yes
@@ -58,7 +58,7 @@ STORAGE=${STORAGE}
       done
    fi
    echo "Start tar for ${ARCHIVETAR}"
-      cd /${OPERATION}/${ARCHIVE} && tar ${OPTIONSTAR} -C ${ARCHIVE} -czf ${ARCHIVETAR} ./ 
+      cd /${OPERATION}/${ARCHIVE} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVETAR} ./ 
    echo "Finished tar for ${ARCHIVE}"
    if [[ ! -d ${DESTINATION}/${STORAGE} ]];then $(command -v mkdir) -p ${DESTINATION}/${STORAGE};fi
       $(command -v rsync) -aq --info=progress2 -hv --remove-source-files /${OPERATION}/${ARCHIVE}/${ARCHIVETAR} ${DESTINATION}/${STORAGE}/${ARCHIVETAR}
@@ -131,7 +131,7 @@ DESTINATION="/mnt/unionfs/appbackups"
    echo "Finished rsync for ${ARCHIVETAR} from ${DESTINATION}"
    if [[ ! -f /${OPERATION}/${ARCHIVE}/${ARCHIVETAR} ]];then nolocalfound;fi
    echo "Start untar for ${ARCHIVETAR} on /${OPERATION}/${ARCHIVE}"
-      cd /${OPERATION}/${ARCHIVE}/ && pigz -dc ${ARCHIVETAR} | pv | tar xf -
+      cd /${OPERATION}/${ARCHIVE}/ && pigz -dc ${ARCHIVETAR} | pv | tar zxf -
       $(command -v chown) -hR 1000:1000 /${OPERATION}/${ARCHIVE}
       $(command -v rm) -f /${OPERATION}/${ARCHIVE}/${ARCHIVETAR}
    echo "Finished untar for ${ARCHIVETAR}"
