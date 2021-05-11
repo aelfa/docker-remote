@@ -39,36 +39,30 @@ usage() {
 ## backup specific app
 backup() {
 STARTTIME=$(date +%s)
-## parser
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
-PASSWORD=${PASSWORD}
-PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 ARCHIVETAR=${ARCHIVE}.tar.gz
 DESTINATION="/mnt/downloads/appbackups"
 STORAGE=${STORAGE}
-## start ##
-   echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${STORAGE}"
-   if [[ ! -x "$(command -v rsync)" ]];then
-      apk --quiet --no-cache --no-progress update && \
-      apk --quiet --no-cache --no-progress upgrade
-      inst="rsync bc pigz tar pv"
-      for i in ${inst};do
-         apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
-      done
-   fi
-   echo "Start tar for ${ARCHIVETAR}"
-      cd /${OPERATION}/${ARCHIVE} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVETAR} ./ 
-   echo "Finished tar for ${ARCHIVE}"
-   if [[ ! -d ${DESTINATION}/${STORAGE} ]];then $(command -v mkdir) -p ${DESTINATION}/${STORAGE};fi
-      $(command -v rsync) -aq --info=progress2 -hv --remove-source-files /${OPERATION}/${ARCHIVE}/${ARCHIVETAR} ${DESTINATION}/${STORAGE}/${ARCHIVETAR}
-      $(command -v chown) -hR 1000:1000 ${DESTINATION}/${STORAGE}/${ARCHIVETAR}
-   echo "Finished rsync for ${ARCHIVETAR} to ${DESTINATION}/${STORAGE}"
-   ## ENDING ##
-   ENDTIME=$(date +%s)
-   TIME="$((count=${ENDTIME}-${STARTTIME}))"
-   duration="$(($TIME / 60)) minutes and $(($TIME % 60)) seconds elapsed."
-   echo "${OPERATION} used ${duration} for ${OPERATION} ${ARCHIVE} ${STORAGE}"
+echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${STORAGE}"
+apk --quiet --no-cache --no-progress update && \
+apk --quiet --no-cache --no-progress upgrade
+inst="rsync bc pigz tar pv"
+for i in ${inst};do
+    apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
+done
+echo "Start tar for ${ARCHIVETAR}"
+cd /${OPERATION}/${ARCHIVE} && tar ${OPTIONSTAR} -C ${ARCHIVE} -cf ${ARCHIVETAR} ./ 
+echo "Finished tar for ${ARCHIVE}"
+if [[ ! -d ${DESTINATION}/${STORAGE} ]];then $(command -v mkdir) -p ${DESTINATION}/${STORAGE};fi
+   $(command -v rsync) -aq --info=progress2 -hv --remove-source-files /${OPERATION}/${ARCHIVE}/${ARCHIVETAR} ${DESTINATION}/${STORAGE}/${ARCHIVETAR}
+   $(command -v chown) -hR 1000:1000 ${DESTINATION}/${STORAGE}/${ARCHIVETAR}
+echo "Finished rsync for ${ARCHIVETAR} to ${DESTINATION}/${STORAGE}"
+ENDTIME=$(date +%s)
+TIME="$((count=${ENDTIME}-${STARTTIME}))"
+duration="$(($TIME / 60)) minutes and $(($TIME % 60)) seconds elapsed."
+echo "${OPERATION} used ${duration} for ${OPERATION} ${ARCHIVE} ${STORAGE}"
+exit
 }
 backuppw() {
 STARTTIME=$(date +%s)
@@ -80,103 +74,77 @@ PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 ARCHIVETAR=${ARCHIVE}.tar.gz
 STORAGE=${STORAGE}
 DESTINATION="/mnt/downloads/appbackups"
-## start ##
-   echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${STORAGE}"
-   if [[ ! -x "$(command -v rsync)" ]];then
-      apk --quiet --no-cache --no-progress update && \
-      apk --quiet --no-cache --no-progress upgrade
-      inst="rsync bc pigz tar pv"
-      for i in ${inst};do
-         apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
-      done
-   fi
-   echo "Start protect-tar for ${PASSWORDTAR}"
-      cd /${OPERATION}/${ARCHIVE} && tar ${OPTIONSTARPW} -cz ${ARCHIVE}/ | openssl enc -aes-256-cbc -e -pass pass:${PASSWORD} > ${ARCHIVEROOT}/${PASSWORDTAR}
-   echo "Finished protect-tar for ${PASSWORDTAR}"
-   if [[ ! -d ${DESTINATION}/${STORAGE} ]];then $(command -v mkdir) -p ${DESTINATION}/${STORAGE};fi
-      $(command -v rsync) -aq --info=progress2 -hv --remove-source-files /${OPERATION}/${ARCHIVE}/${PASSWORDTAR} ${DESTINATION}/${STORAGE}/${PASSWORDTAR}
-      $(command -v chown) -hR 1000:1000 ${DESTINATION}/${STORAGE}/${PASSWORDTAR}
-   echo "Finished rsync for ${PASSWORDTAR} to ${DESTINATION}/${STORAGE}"
-   ## ENDING ##
-   ENDTIME=$(date +%s)
-   TIME="$((count=${ENDTIME}-${STARTTIME}))"
-   duration="$(($TIME / 60)) minutes and $(($TIME % 60)) seconds elapsed."
-   echo "${OPERATION} used ${duration} for ${OPERATION} ${PASSWORDTAR}"
+echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${STORAGE}"
+apk --quiet --no-cache --no-progress update
+apk --quiet --no-cache --no-progress upgrade
+inst="rsync bc pigz tar"
+for i in ${inst};do
+    apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
+done
+echo "Start protect-tar for ${PASSWORDTAR}"
+cd /${OPERATION}/${ARCHIVE} && tar ${OPTIONSTARPW} -cz ${ARCHIVE}/ | openssl enc -aes-256-cbc -e -pass pass:${PASSWORD} > ${ARCHIVEROOT}/${PASSWORDTAR}
+echo "Finished protect-tar for ${PASSWORDTAR}"
+if [[ ! -d ${DESTINATION}/${STORAGE} ]];then $(command -v mkdir) -p ${DESTINATION}/${STORAGE};fi
+   $(command -v rsync) -aq --info=progress2 -hv --remove-source-files /${OPERATION}/${ARCHIVE}/${PASSWORDTAR} ${DESTINATION}/${STORAGE}/${PASSWORDTAR}
+   $(command -v chown) -hR 1000:1000 ${DESTINATION}/${STORAGE}/${PASSWORDTAR}
+echo "Finished rsync for ${PASSWORDTAR} to ${DESTINATION}/${STORAGE}"
+ENDTIME=$(date +%s)
+TIME="$((count=${ENDTIME}-${STARTTIME}))"
+duration="$(($TIME / 60)) minutes and $(($TIME % 60)) seconds elapsed."
+echo "${OPERATION} used ${duration} for ${OPERATION} ${PASSWORDTAR}"
+exit
 }
 ## restore specific app
 restore() {
 STARTTIME=$(date +%s)
-## parser
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
 ARCHIVETAR=${ARCHIVE}.tar.gz
-PASSWORD=${PASSWORD}
-PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 STORAGE=${STORAGE}
 DESTINATION="/mnt/unionfs/appbackups"
-## start ##
-   echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${STORAGE}"
-   if [[ ! -f ${DESTINATION}/${STORAGE}/${ARCHIVETAR} ]];then noarchivefound;fi
-   if [[ ! -x "$(command -v rsync)" ]];then
-      apk --quiet --no-cache --no-progress update && \
-      apk --quiet --no-cache --no-progress upgrade
-      inst="rsync bc pigz tar pv"
-      for i in ${inst};do
-         apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
-      done
-   fi
-   if [[ ! -d /${OPERATION}/${ARCHIVE} ]];then $(command -v mkdir) -p /${OPERATION}/${ARCHIVE};fi
-      $(command -v rsync) -aq --info=progress2 -hv ${DESTINATION}/${STORAGE}/${ARCHIVETAR} /${OPERATION}/${ARCHIVE}/${ARCHIVETAR}
-      $(command -v chown) -hR 1000:1000 /${OPERATION}/${ARCHIVE}
-   echo "Finished rsync for ${ARCHIVETAR} from ${DESTINATION}"
-   if [[ ! -f /${OPERATION}/${ARCHIVE}/${ARCHIVETAR} ]];then nolocalfound;fi
-   echo "Start untar for ${ARCHIVETAR} on /${OPERATION}/${ARCHIVE}"
-      cd /${OPERATION}/${ARCHIVE}/ && pigz -dc ${ARCHIVETAR} | pv | tar zxf -
-      $(command -v chown) -hR 1000:1000 /${OPERATION}/${ARCHIVE}
-      $(command -v rm) -f /${OPERATION}/${ARCHIVE}/${ARCHIVETAR}
-   echo "Finished untar for ${ARCHIVETAR}"
-   ## ENDING ##
-   ENDTIME=$(date +%s)
-   TIME="$((count=${ENDTIME}-${STARTTIME}))"
-   duration="$(($TIME / 60)) minutes and $(($TIME % 60)) seconds elapsed."
-   echo "${OPERATION} used ${duration} for ${OPERATION} ${ARCHIVE} ${STORAGE}"
+echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${STORAGE}"
+if [[ ! -f ${DESTINATION}/${STORAGE}/${ARCHIVETAR} ]];then noarchivefound;fi
+apk --quiet --no-cache --no-progress update
+apk --quiet --no-cache --no-progress upgrade
+inst="bc pigz tar"
+for i in ${inst};do
+    apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
+done
+if [[ ! -d /${OPERATION}/${ARCHIVE} ]];then $(command -v mkdir) -p /${OPERATION}/${ARCHIVE};fi
+echo "Start untar for ${ARCHIVETAR} on /${OPERATION}/${ARCHIVE}"
+   unpigz -dcqp 4 ${DESTINATION}/${STORAGE}/${ARCHIVETAR} | tar ospxf - -C /${OPERATION}/${ARCHIVE}
+echo "Finished untar for ${ARCHIVETAR}"
+ENDTIME=$(date +%s)
+TIME="$((count=${ENDTIME}-${STARTTIME}))"
+duration="$(($TIME / 60)) minutes and $(($TIME % 60)) seconds elapsed."
+echo "${OPERATION} used ${duration} for ${OPERATION} ${ARCHIVE} ${STORAGE}"
+exit
 }
 restorepw() {
 STARTTIME=$(date +%s)
-## parser
 OPERATION=${OPERATION}
 ARCHIVE=${ARCHIVE}
 PASSWORD=${PASSWORD}
 PASSWORDTAR=${ARCHIVE}.tar.gz.enc
 STORAGE=${STORAGE}
 DESTINATION="/mnt/unionfs/appbackups"
-## start ##
-   echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${STORAGE}"
-   if [[ ! -f ${DESTINATION}/${STORAGE}/${ARCHIVETAR} ]];then noarchivefoundpw;fi
-   if [[ ! -x "$(command -v rsync)" ]];then
-      apk --quiet --no-cache --no-progress update && \
-      apk --quiet --no-cache --no-progress upgrade
-      inst="rsync bc pigz tar pv"
-      for i in ${inst};do
-         apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
-      done
-   fi
-   if [[ ! -d /${OPERATION}/${ARCHIVE} ]];then $(command -v mkdir) -p ${ARCHIVEROOT};fi
-      $(command -v rsync) -aq --info=progress2 -hv ${DESTINATION}/${STORAGE}/${PASSWORDTAR} /${OPERATION}/${ARCHIVE}/${PASSWORDTAR}
-      $(command -v chown) -hR 1000:1000 ${DESTINATION}
-   echo "Finished rsync for ${PASSWORDTAR} from ${DESTINATION}"
-   if [[ ! -f /${OPERATION}/${ARCHIVE}/${PASSWORDTAR} ]];then nolocalfoundpw;fi
-   echo "Start protect-untar for ${PASSWORDTAR} on ${ARCHIVEROOT}"
-      cd /${OPERATION}/${ARCHIVE}/ && openssl aes-256-cbc -pass pass:${PASSWORD} -d -in ${PASSWORDTAR} | pigz -dc ${ARCHIVETAR} | tar xf -
-      $(command -v chown) -hR 1000:1000 ${ARCHIVEROOT}
-      $(command -v rm) -f /${OPERATION}/${ARCHIVE}/${PASSWORDTAR}
-   echo "Finished protect-untar for ${PASSWORDTAR}"
-   ## ENDING ##
-   ENDTIME=$(date +%s)
-   TIME="$((count=${ENDTIME}-${STARTTIME}))"
-   duration="$(($TIME / 60)) minutes and $(($TIME % 60)) seconds elapsed."
-   echo "${OPERATION} used ${duration} for ${OPERATION} ${ARCHIVE} ${STORAGE}"
-   exit
+echo "show ${OPERATION} command = ${OPERATION} ${ARCHIVE} ${STORAGE}"
+if [[ ! -f ${DESTINATION}/${STORAGE}/${ARCHIVETAR} ]];then noarchivefoundpw;fi
+apk --quiet --no-cache --no-progress update
+apk --quiet --no-cache --no-progress upgrade
+inst="bc pigz tar"
+for i in ${inst};do
+    apk --quiet --no-cache --no-progress add $i && echo "depends install of $i"
+done
+if [[ ! -d /${OPERATION}/${ARCHIVE} ]];then $(command -v mkdir) -p ${ARCHIVEROOT};fi
+echo "Start protect-untar for ${PASSWORDTAR} on ${ARCHIVEROOT}"
+   openssl aes-256-cbc -pass pass:${PASSWORD} -d -in ${PASSWORDTAR} | unpigz -dcqp 4 ${DESTINATION}/${STORAGE}/${ARCHIVETAR} | tar ospxf - -C /${OPERATION}/${ARCHIV}
+echo "Finished protect-untar for ${PASSWORDTAR}"
+ENDTIME=$(date +%s)
+TIME="$((count=${ENDTIME}-${STARTTIME}))"
+duration="$(($TIME / 60)) minutes and $(($TIME % 60)) seconds elapsed."
+echo "${OPERATION} used ${duration} for ${OPERATION} ${ARCHIVE} ${STORAGE}"
+exit
 }
 noarchivefoundpw() {
 OPERATION=${OPERATION}
@@ -206,34 +174,6 @@ tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     ❌ ERROR
     Sorry , We could not find ${ARCHIVETAR} on ${DESTINATION}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-EOF
-sleep 10 && exit
-}
-nolocalfoundpw() {
-OPERATION=${OPERATION}
-ARCHIVE=${ARCHIVE}
-PASSWORD=${PASSWORD}
-STORAGE=${STORAGE}
-PASSWORDTAR=${ARCHIVE}.tar.gz.enc
-tee <<-EOF
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    ❌ ERROR
-    Sorry , We could not find ${PASSWORDTAR} on /${OPERATION}/${ARCHIVE}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-EOF
-sleep 10 && exit
-}
-nolocalfound() {
-OPERATION=${OPERATION}
-ARCHIVE=${ARCHIVE}
-PASSWORD=${PASSWORD}
-STORAGE=${STORAGE}
-ARCHIVETAR=${ARCHIVE}.tar.gz
-tee <<-EOF
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    ❌ ERROR
-    Sorry , We could not find ${ARCHIVETAR} on /${OPERATION}/${ARCHIVE}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
 sleep 10 && exit

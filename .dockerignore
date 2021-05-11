@@ -1,5 +1,4 @@
 .all-contributorsrc
-.yamllint.yaml
 LICENSE
 composer.phar
 /vendor/
@@ -7,3 +6,9 @@ composer.phar
 LICENSE
 *.md
 *.json
+*.yml
+/docs/*
+.editorconfig
+*.sample
+*.all-contributorsrc
+.gitignore

@@ -1,6 +1,14 @@
+.all-contributorsrc
+LICENSE
 composer.phar
 /vendor/
 ./github
 LICENSE
 *.md
 *.json
+*.yml
+/docs/*
+.editorconfig
+*.sample
+*.all-contributorsrc
+.gitignore
